@@ -1,0 +1,15 @@
+PODS:
+  - Firebase (2.5.1)
+  - IQKeyboardManager (4.0.0)
+
+DEPENDENCIES:
+  - Firebase (~> 2.5)
+  - IQKeyboardManager
+
+SPEC CHECKSUMS:
+  Firebase: 3565ea88b830f28f2c77ecc524622bc71a20d085
+  IQKeyboardManager: b91928f7927ba55a5829b4dcf4b7a6736ac9fc22
+
+PODFILE CHECKSUM: c1d77fffd8efd4a25a7f976aa6fbd813a7c36fe5
+
+COCOAPODS: 1.0.0.beta.3
