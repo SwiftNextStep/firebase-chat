@@ -24,12 +24,9 @@ class LoginVC: UIViewController {
         
         if FirebaseApp.authData != nil {
             KEY_UID = FirebaseApp.authData.uid
-            FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues(["isOnline":true])
+            FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues([KEY_ISONLINE:true])
             performSegueWithIdentifier(storyboard.chatSegue, sender: nil)
-        } else {
-            // We likely returned from chatVC as a logoff
-        }
-        
+        }         
     }
     
     @IBAction func userLogin(sender: UIButton) {
@@ -74,9 +71,9 @@ class LoginVC: UIViewController {
                 print(error.localizedDescription)
             } else {
                 if NEW_USER {
-                    FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).setValue(["isOnline":true,"name":HANDLE])
+                    FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).setValue([KEY_ISONLINE:true,"name":HANDLE])
                 } else {
-                    FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues(["isOnline":true])
+                    FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues([KEY_ISONLINE:true])
                 }
             }
         }

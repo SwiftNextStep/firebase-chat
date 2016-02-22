@@ -6,20 +6,20 @@
 import UIKit
 import Firebase
 
-class ChatVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ChatVC: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var chatHandleLabel: UILabel!
     @IBOutlet weak var chatText: UITextView!
     @IBOutlet weak var chatTable: UITableView!
     
     var posts = [Post]()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        chatTable.dataSource = self
-        chatTable.delegate = self
         
+        chatTable.dataSource = self
+        
+        // Add ability to tab chat label as "send" button
         let labelTappedRecognizer = UITapGestureRecognizer(target: self, action: "tapLabel:")
         labelTappedRecognizer.numberOfTapsRequired = 1
         chatHandleLabel.addGestureRecognizer(labelTappedRecognizer)
@@ -28,14 +28,13 @@ class ChatVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
         setupFBUserObservers()
         setupFBPostObservers()
-
+        
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("chatCell", forIndexPath: indexPath) as! ChatCell
-
         cell.cellPost = posts[indexPath.row]
-
         return cell
     }
     
@@ -48,10 +47,13 @@ class ChatVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
     
     @IBAction func logOffChat(sender: UIButton) {
-        FirebaseUsers.childByAppendingPath(KEY_UID).updateChildValues(["isOnline":false])
+        FirebaseUsers.childByAppendingPath(KEY_UID).updateChildValues([KEY_ISONLINE:false])
+        
+        // Clear globals for new login attemp
         KEY_UID = ""
         HANDLE = ""
         NEW_USER = false
+        
         FirebaseApp.unauth()
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -62,6 +64,8 @@ class ChatVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             FirebasePosts.childByAutoId().setValue(details)
             chatText.text = ""
         }
+        
+        // Close keyboard
         chatText.resignFirstResponder()
     }
     
@@ -70,18 +74,21 @@ class ChatVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         FirebasePosts.observeEventType(.ChildAdded) { (snapshot: FDataSnapshot!) -> Void in
             let theMessage = snapshot.value["message"] as! String
             let theSender = snapshot.value["sender"] as! String
-
-            let x = Post(id: snapshot.key, message: theMessage, sender: theSender)
-            self.posts.append(x)
+            
+            let newPost = Post(id: snapshot.key, message: theMessage, sender: theSender)
+            self.posts.append(newPost)
             self.chatTable.reloadData()
-
+            
         }
     }
     
     func setupFBUserObservers() {
         FirebaseUsers.observeEventType(.ChildAdded, withBlock: { snapshot in
+            
+            // Create a dictionary holding our unique users
             users.updateValue(snapshot.value["name"] as! String, forKey: snapshot.key)
-
+            
+            // Capture current user and set their chat handle
             if snapshot.key == KEY_UID {
                 if let myhandle = snapshot.value["name"] as? String {
                     HANDLE = myhandle
@@ -91,6 +98,7 @@ class ChatVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         })
         
         FirebaseUsers.observeEventType(.ChildChanged, withBlock: { snapshot in
+            
             if snapshot.key == KEY_UID {
                 if let myhandle = snapshot.value["name"] as? String {
                     HANDLE = myhandle

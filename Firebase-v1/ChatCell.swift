@@ -27,10 +27,11 @@ class ChatCell: UITableViewCell {
         if let aSender = users[cellPost!.sender!] {
             theSender = aSender
         }
+        
         switch theSender {
         case "Tyche the Dog" : chatPix.image = UIImage(named: theSender)
-        case "SwaxMaster" : chatPix.image = UIImage(named: theSender)
-        case "Ziggster" : chatPix.image = UIImage(named: theSender)
+        case "SwaxMaster"    : chatPix.image = UIImage(named: theSender)
+        case "Ziggster"      : chatPix.image = UIImage(named: theSender)
             
         default: chatPix.image = UIImage(named: "blank")
         }

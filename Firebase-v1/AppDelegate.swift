@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(application: UIApplication) {
         
         if KEY_UID != "" {
-        FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues(["isOnline":false])
+        FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues([KEY_ISONLINE:false])
         }
         
     }
@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(application: UIApplication) {
         
         if KEY_UID != "" {
-            FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues(["isOnline":true])
+            FirebaseApp.childByAppendingPath("users").childByAppendingPath(KEY_UID).updateChildValues([KEY_ISONLINE:true])
         }
     }
 
